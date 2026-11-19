@@ -1,0 +1,22 @@
+name: Degusta IPA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  ipa:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Descomprimir y compilar
+        run: |
+          unzip -q Degusta-iOS-Proyecto.zip -d proyecto
+          cd proyecto
+          SIGNING=unsigned bash scripts/build-ipa.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Degusta-IPA
+          path: proyecto/artifacts/*.ipa
+          if-no-files-found: error
